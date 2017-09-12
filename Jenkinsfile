@@ -14,6 +14,10 @@ properties([
     pipelineTriggers([])
 ])
 
+echo "pkg_version: ${pkg_version}"
+echo "pkg_commit: ${pkg_commit}"
+echo "is_release ${is_release}"
+
 def run_in_container(container_name, script) {
     sh "docker exec ${container_name} sh -c \"${script}\""
 }
@@ -78,8 +82,7 @@ node('docker') {
         stage('Package') {
             release_flag = get_release_flag(is_release)
             def package_script = """
-                make_conan_package.sh \
-                    ${release_flag} \
+                make_conan_package.sh ${release_flag} \
                     ${project} \
                     ${pkg_version} \
                     ${pkg_commit}
