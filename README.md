@@ -1,2 +1,4 @@
 # conan-graylog-logger
-Conan package for graylog-logger (experimental)
+
+Conan package for graylog-logger (https://github.com/ess-dmsc/graylog-logger)
+(experimental).
