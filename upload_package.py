@@ -8,23 +8,18 @@ import conanfile
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('remote')
+    arg_parser.add_argument('version')
     arg_parser.add_argument('user')
     arg_parser.add_argument('channel')
 
     args = arg_parser.parse_args()
 
-    remote = args.remote
-    user = args.user
-    channel = args.channel
-    name = conanfile.GraylogloggerConan.name
-    version = conanfile.GraylogloggerConan.version
-
     cmd = """conan upload --all --remote {} {}/{}@{}/{}""".format(
-        remote,
-        name,
-        version,
-        user,
-        channel
+        args.remote,
+        conanfile.GraylogloggerConan.name,
+        args.version,
+        args.user,
+        args.channel
     )
 
     os.system(cmd)

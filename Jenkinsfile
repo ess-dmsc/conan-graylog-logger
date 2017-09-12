@@ -93,6 +93,7 @@ node('docker') {
                 cd ${project}
                 ./upload_package.py \
                     ${conan_remote} \
+                    ${pkg_version} \
                     ${conan_user} \
                     ${conan_pkg_channel}
             """
