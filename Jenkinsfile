@@ -14,10 +14,6 @@ properties([
     pipelineTriggers([])
 ])
 
-echo "pkg_version: ${pkg_version}"
-echo "pkg_commit: ${pkg_commit}"
-echo "is_release ${is_release}"
-
 def run_in_container(container_name, script) {
     sh "docker exec ${container_name} sh -c \"${script}\""
 }
