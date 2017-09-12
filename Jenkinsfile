@@ -18,6 +18,14 @@ def run_in_container(container_name, script) {
     sh "docker exec ${container_name} sh -c \"${script}\""
 }
 
+def get_release_flag(is_release) {
+    if(is_release) {
+        return '-r'
+    } else {
+        return ''
+    }
+}
+
 node('docker') {
     try {
         def container_name = "${project}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
@@ -68,12 +76,7 @@ node('docker') {
         }
 
         stage('Package') {
-            if(is_release) {
-                def release_flag = "-r"
-            } else {
-                def release_flag = ""
-            }
-
+            release_flag = get_release_flag(is_release)
             def package_script = """
                 make_conan_package.sh \
                     ${release_flag} \
