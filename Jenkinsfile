@@ -73,7 +73,8 @@ node('docker') {
         stage('Package') {
             release_flag = get_release_flag(is_release)
             sh """docker exec ${container_name} sh -c \"
-                make_conan_package.sh ${release_flag} \
+                make_conan_package.sh -k -d ${project}_packaging \
+                    ${release_flag} \
                     ${project} \
                     ${pkg_version} \
                     ${pkg_commit}
@@ -84,10 +85,8 @@ node('docker') {
             sh """docker exec ${container_name} sh -c \"
                 export http_proxy=''
                 export https_proxy=''
-                cd ${project}
-                ./upload_package.py \
+                upload_conan_package.sh ${project}_packaging/conanfile.py \
                     ${conan_remote} \
-                    ${pkg_version} \
                     ${conan_user} \
                     ${conan_pkg_channel}
             \""""
