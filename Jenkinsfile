@@ -14,10 +14,6 @@ properties([
     pipelineTriggers([])
 ])
 
-def run_in_container(container_name, script) {
-    sh "docker exec ${container_name} sh -c \"${script}\""
-}
-
 def get_release_flag(is_release) {
     if(is_release) {
         return '-r'
@@ -37,19 +33,19 @@ node('docker') {
         ")
 
         stage('Info') {
-            run_in_container(container_name, """
+            sh """docker exec ${container_name} sh -c "
                 cmake3 --version
                 conan --version
                 cppcheck --version
                 git --version
-            """)
+            " """
         }
 
         stage('Checkout') {
-            run_in_container(container_name, """
+            sh """docker exec ${container_name} sh -c "
                 git clone https://github.com/ess-dmsc/${project}.git \
                     --branch ${env.BRANCH_NAME}
-            """)
+            " """
         }
 
         stage('Setup') {
@@ -58,7 +54,7 @@ node('docker') {
                     variable: 'CONAN_PASSWORD'
                 )])
             {
-                def setup_script = """
+                sh """docker exec ${container_name} sh -c "
                     set +x
                     export http_proxy=''
                     export https_proxy=''
@@ -70,24 +66,22 @@ node('docker') {
                         --remote ${conan_remote} \
                         ${conan_user} \
                         > /dev/null
-                """
-                sh "docker exec ${container_name} sh -c \"${setup_script}\""
+                " """
             }
         }
 
         stage('Package') {
             release_flag = get_release_flag(is_release)
-            def package_script = """
+            sh """docker exec ${container_name} sh -c "
                 make_conan_package.sh ${release_flag} \
                     ${project} \
                     ${pkg_version} \
                     ${pkg_commit}
-            """
-            sh "docker exec ${container_name} sh -c \"${package_script}\""
+            " """
         }
 
         stage('Upload') {
-            def upload_script = """
+            sh """docker exec ${container_name} sh -c "
                 export http_proxy=''
                 export https_proxy=''
                 cd ${project}
@@ -96,8 +90,7 @@ node('docker') {
                     ${pkg_version} \
                     ${conan_user} \
                     ${conan_pkg_channel}
-            """
-            sh "docker exec ${container_name} sh -c \"${upload_script}\""
+            " """
         }
     } finally {
         container.stop()
