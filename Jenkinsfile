@@ -1,5 +1,5 @@
 def project = "conan-graylog-logger"
-def centos = docker.image('essdmscdm/centos-build-node:0.7.0')
+def centos = docker.image('essdmscdm/centos-build-node:0.7.2')
 
 def conan_remote = "ess-dmsc-local"
 def conan_user = "ess-dmsc"
