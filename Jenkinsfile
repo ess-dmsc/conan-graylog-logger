@@ -33,19 +33,19 @@ node('docker') {
         ")
 
         stage('Info') {
-            sh """docker exec ${container_name} sh -c "
+            sh """docker exec ${container_name} sh -c \"
                 cmake3 --version
                 conan --version
                 cppcheck --version
                 git --version
-            " """
+            \""""
         }
 
         stage('Checkout') {
-            sh """docker exec ${container_name} sh -c "
+            sh """docker exec ${container_name} sh -c \"
                 git clone https://github.com/ess-dmsc/${project}.git \
                     --branch ${env.BRANCH_NAME}
-            " """
+            \""""
         }
 
         stage('Setup') {
@@ -54,7 +54,7 @@ node('docker') {
                     variable: 'CONAN_PASSWORD'
                 )])
             {
-                sh """docker exec ${container_name} sh -c "
+                sh """docker exec ${container_name} sh -c \"
                     set +x
                     export http_proxy=''
                     export https_proxy=''
@@ -66,22 +66,22 @@ node('docker') {
                         --remote ${conan_remote} \
                         ${conan_user} \
                         > /dev/null
-                " """
+                \""""
             }
         }
 
         stage('Package') {
             release_flag = get_release_flag(is_release)
-            sh """docker exec ${container_name} sh -c "
+            sh """docker exec ${container_name} sh -c \"
                 make_conan_package.sh ${release_flag} \
                     ${project} \
                     ${pkg_version} \
                     ${pkg_commit}
-            " """
+            \""""
         }
 
         stage('Upload') {
-            sh """docker exec ${container_name} sh -c "
+            sh """docker exec ${container_name} sh -c \"
                 export http_proxy=''
                 export https_proxy=''
                 cd ${project}
@@ -90,7 +90,7 @@ node('docker') {
                     ${pkg_version} \
                     ${conan_user} \
                     ${conan_pkg_channel}
-            " """
+            \""""
         }
     } finally {
         container.stop()
