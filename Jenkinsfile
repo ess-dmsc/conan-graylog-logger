@@ -1,6 +1,6 @@
 project = "conan-graylog-logger"
 
-def centos = docker.image('essdmscdm/centos-build-node:0.7.2')
+def centos = docker.image('essdmscdm/centos-build-node:0.7.3')
 
 def conan_remote = "ess-dmsc-local"
 def conan_user = "ess-dmsc"
@@ -85,11 +85,21 @@ node('docker') {
             sh """docker exec ${container_name} sh -c \"
                 export http_proxy=''
                 export https_proxy=''
-                upload_conan_package.sh ${project}_pkg/conanfile.py \
+                upload_conan_package.sh -d PACKAGE_NAME \
+                    ${project}_pkg/conanfile.py \
                     ${conan_remote} \
                     ${conan_user} \
                     ${conan_pkg_channel}
             \""""
+        }
+
+        stage('Archive') {
+            // Remove file outside container.
+            sh "rm -f PACKAGE_NAME"
+            // Copy archive from container.
+            sh "docker cp ${container_name}:/home/jenkins/PACKAGE_NAME ."
+
+            archiveArtifacts "PACKAGE_NAME"
         }
     } finally {
         container.stop()
