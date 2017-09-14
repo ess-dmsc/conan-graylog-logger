@@ -1,3 +1,5 @@
+project = "conan-graylog-logger"
+
 def centos = docker.image('essdmscdm/centos-build-node:0.7.2')
 
 def conan_remote = "ess-dmsc-local"
@@ -18,8 +20,17 @@ node('docker') {
             returnStdout: true
     }
 
+    // Delete workspace when build is done
+    cleanWs()
+
+    dir("${project}") {
+        stage('Checkout') {
+            scm_vars = checkout scm
+        }
+    }
+
     try {
-        def container_name = "${env.JOB_BASE_NAME}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        def container_name = "${project}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
         container = centos.run("\
             --name ${container_name} \
             --tty \
@@ -27,19 +38,15 @@ node('docker') {
             --env https_proxy=${env.https_proxy} \
         ")
 
+        // Copy sources to container.
+        sh "docker cp ${project} ${container_name}:/home/jenkins/${project}"
+
         stage('Info') {
             sh """docker exec ${container_name} sh -c \"
                 cmake3 --version
                 conan --version
                 cppcheck --version
                 git --version
-            \""""
-        }
-
-        stage('Checkout') {
-            sh """docker exec ${container_name} sh -c \"
-                git clone https://github.com/ess-dmsc/${env.JOB_BASE_NAME}.git \
-                    --branch ${env.BRANCH_NAME}
             \""""
         }
 
@@ -68,8 +75,8 @@ node('docker') {
         stage('Package') {
             release_flag = get_release_flag(is_release)
             sh """docker exec ${container_name} sh -c \"
-                make_conan_package.sh -k -d ${env.JOB_BASE_NAME}_pkg \
-                    ${env.JOB_BASE_NAME} \
+                make_conan_package.sh -k -d ${project}_pkg \
+                    ${project} \
                     ${conan_pkg_version} \
                     ${conan_pkg_commit}
             \""""
@@ -79,7 +86,7 @@ node('docker') {
             sh """docker exec ${container_name} sh -c \"
                 export http_proxy=''
                 export https_proxy=''
-                upload_conan_package.sh ${env.JOB_BASE_NAME}_pkg/conanfile.py \
+                upload_conan_package.sh ${project}_pkg/conanfile.py \
                     ${conan_remote} \
                     ${conan_user} \
                     ${conan_pkg_channel}
