@@ -1,30 +1,25 @@
-def project = "conan-graylog-logger"
 def centos = docker.image('essdmscdm/centos-build-node:0.7.2')
 
 def conan_remote = "ess-dmsc-local"
 def conan_user = "ess-dmsc"
 def conan_pkg_channel = "testing"
-
-properties([
-    parameters([
-        string(defaultValue: '', description: '', name: 'pkg_version'),
-        string(defaultValue: '', description: '', name: 'pkg_commit'),
-        booleanParam(defaultValue: false, description: '', name: 'is_release')
-    ]),
-    pipelineTriggers([])
-])
-
-def get_release_flag(is_release) {
-    if(is_release) {
-        return '-r'
-    } else {
-        return ''
-    }
-}
+def conan_pkg_version = "master"
 
 node('docker') {
+    stage('Get Commit') {
+        step([
+            $class: 'CopyArtifact',
+            filter: 'GIT_COMMIT',
+            fingerprintArtifacts: true,
+            projectName: 'ess-dmsc/graylog-logger/master',
+            target: 'artifacts'
+        ])
+        conan_pkg_commit = sh script: 'cat artifacts/GIT_COMMIT',
+            returnStdout: true
+    }
+
     try {
-        def container_name = "${project}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        def container_name = "${env.JOB_BASE_NAME}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
         container = centos.run("\
             --name ${container_name} \
             --tty \
@@ -43,7 +38,7 @@ node('docker') {
 
         stage('Checkout') {
             sh """docker exec ${container_name} sh -c \"
-                git clone https://github.com/ess-dmsc/${project}.git \
+                git clone https://github.com/ess-dmsc/${env.JOB_BASE_NAME}.git \
                     --branch ${env.BRANCH_NAME}
             \""""
         }
@@ -73,11 +68,10 @@ node('docker') {
         stage('Package') {
             release_flag = get_release_flag(is_release)
             sh """docker exec ${container_name} sh -c \"
-                make_conan_package.sh -k -d ${project}_packaging \
-                    ${release_flag} \
-                    ${project} \
-                    ${pkg_version} \
-                    ${pkg_commit}
+                make_conan_package.sh -k -d ${env.JOB_BASE_NAME}_pkg \
+                    ${env.JOB_BASE_NAME} \
+                    ${conan_pkg_version} \
+                    ${conan_pkg_commit}
             \""""
         }
 
@@ -85,7 +79,7 @@ node('docker') {
             sh """docker exec ${container_name} sh -c \"
                 export http_proxy=''
                 export https_proxy=''
-                upload_conan_package.sh ${project}_packaging/conanfile.py \
+                upload_conan_package.sh ${env.JOB_BASE_NAME}_pkg/conanfile.py \
                     ${conan_remote} \
                     ${conan_user} \
                     ${conan_pkg_channel}
