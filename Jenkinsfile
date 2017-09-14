@@ -73,7 +73,6 @@ node('docker') {
         }
 
         stage('Package') {
-            release_flag = get_release_flag(is_release)
             sh """docker exec ${container_name} sh -c \"
                 make_conan_package.sh -k -d ${project}_pkg \
                     ${project} \
