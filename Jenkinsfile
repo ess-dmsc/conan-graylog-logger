@@ -94,12 +94,17 @@ node('docker') {
         }
 
         stage('Archive') {
-            // Remove file outside container.
-            sh "rm -f PACKAGE_NAME"
-            // Copy archive from container.
-            sh "docker cp ${container_name}:/home/jenkins/PACKAGE_NAME ."
+            sh """docker exec ${container_name} sh -c \"
+                tar czvf ${project}_pkg.tar.gz ${project}_pkg
+            \""""
 
-            archiveArtifacts "PACKAGE_NAME"
+            // Remove files outside container.
+            sh "rm -f PACKAGE_NAME ${project}_pkg.tar.gz"
+            // Copy files from container.
+            sh "docker cp ${container_name}:/home/jenkins/PACKAGE_NAME ."
+            sh "docker cp ${container_name}:/home/jenkins/${project}_pkg.tar.gz ."
+
+            archiveArtifacts "PACKAGE_NAME,${project}_pkg.tar.gz"
         }
     } finally {
         container.stop()
