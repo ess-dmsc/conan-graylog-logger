@@ -87,7 +87,7 @@ def get_pipeline(image_key) {
 
                 // Copy files from container.
                 sh "docker cp ${container_name}:/home/jenkins/PACKAGE_NAME ./PACKAGE_NAME-${image_key}"
-                sh "docker cp ${container_name}:/home/jenkins/${project}_pkg.tar.gz ./{project}_pkg-${image_key}.tar.gz"
+                sh "docker cp ${container_name}:/home/jenkins/${project}_pkg.tar.gz ./${project}_pkg-${image_key}.tar.gz"
 
                 archiveArtifacts "PACKAGE_NAME-${image_key},${project}_pkg-${image_key}.tar.gz"
             }
