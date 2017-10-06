@@ -70,7 +70,8 @@ def get_pipeline(image_key) {
 
             stage("${image_key}: Upload") {
                 sh """docker exec ${container_name} ${custom_sh} -c \"
-                    upload_conan_package.sh ${project}_pkg/conanfile.py \
+                    upload_conan_package.sh -f PACKAGE_NAME \
+                        ${project}_pkg/conanfile.py \
                         ${conan_remote} \
                         ${conan_user} \
                         ${conan_pkg_channel}
