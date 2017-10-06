@@ -5,7 +5,6 @@ conan_user = "ess-dmsc"
 conan_pkg_channel = "testing"
 conan_pkg_version = "master"
 
-
 images = [
     'centos': [
         'name': 'essdmscdm/centos-build-node:0.7.6',
