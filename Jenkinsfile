@@ -82,7 +82,7 @@ def get_pipeline(image_key) {
 
             stage("${image_key}: Archive") {
                 sh """docker exec ${container_name} sh -c \"
-                    tar czvf ${project}-${image_key}_pkg.tar.gz ${project}_pkg
+                    tar czvf ${project}_pkg.tar.gz ${project}_pkg
                 \""""
 
                 // Copy files from container.
