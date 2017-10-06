@@ -62,7 +62,7 @@ def get_pipeline(image_key) {
 
             stage("${image_key}: Package") {
                 sh """docker exec ${container_name} ${custom_sh} -c \"
-                    make_conan_package.sh -k -d ${project}_pkg \
+                    make_conan_package.sh -r -k -d ${project}_pkg \
                         ${project} \
                         ${conan_pkg_version} \
                         ${conan_pkg_commit}
