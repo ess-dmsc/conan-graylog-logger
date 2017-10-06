@@ -104,6 +104,18 @@ node('docker') {
     // Delete workspace when build is done
     cleanWs()
 
+    stage('Get Commit') {
+        step([
+            $class: 'CopyArtifact',
+            filter: 'GIT_COMMIT',
+            fingerprintArtifacts: true,
+            projectName: 'ess-dmsc/graylog-logger/master',
+            target: 'artifacts'
+        ])
+        conan_pkg_commit = sh script: 'cat artifacts/GIT_COMMIT',
+            returnStdout: true
+    }
+
     dir("${project}") {
         stage('Checkout') {
             scm_vars = checkout scm
