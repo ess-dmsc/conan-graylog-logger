@@ -3,8 +3,8 @@ project = "conan-graylog-logger"
 conan_remote = "ess-dmsc-local"
 conan_user = "ess-dmsc"
 conan_pkg_channel = "stable"
-conan_pkg_version = "1.0.2-dm1"
-conan_pkg_commit = "v1.0.2"
+conan_pkg_version = "1.0.3"
+conan_pkg_commit = "v1.0.3"
 
 images = [
     'centos': [
