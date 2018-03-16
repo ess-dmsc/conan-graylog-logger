@@ -4,7 +4,7 @@ from conans import ConanFile, CMake, tools
 
 class GraylogloggerConan(ConanFile):
     name = "graylog-logger"
-    version = "1.0.4-dm1"
+    version = "1.0.5-dm1"
     license = "BSD 2-Clause"
     url = "https://bintray.com/ess-dmsc/graylog-logger"
     settings = "os", "compiler", "build_type", "arch"
@@ -12,7 +12,7 @@ class GraylogloggerConan(ConanFile):
 
     def source(self):
         self.run("git clone https://github.com/ess-dmsc/graylog-logger.git")
-        self.run("cd graylog-logger && git checkout v1.0.4")
+        self.run("cd graylog-logger && git checkout v1.0.5")
 
     def build(self):
         cmake = CMake(self)
