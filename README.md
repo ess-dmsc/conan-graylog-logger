@@ -16,7 +16,7 @@ If you have made changes to the *graylog-logger* library and subsequently also w
 	```
 	conan create . graylog-logger/x.y.z-dm1@ess-dmsc/stable
 	```
-	Where **x.y.z-dm1** is the same version strin as set on line 7 in the *conanfile.py*-file.
+	Where **x.y.z-dm1** is the same version string as set on line 7 in the *conanfile.py*-file.
 
 4. Upload the new package to the relevant conan package repository by executing:
 

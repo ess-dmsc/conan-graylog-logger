@@ -3,6 +3,7 @@ import os
 
 
 class GraylogloggerTestConan(ConanFile):
+    requires = ("cmake_installer/3.10.0@conan/stable", )
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
 
@@ -12,10 +13,6 @@ class GraylogloggerTestConan(ConanFile):
         # in "test_package".
         cmake.configure(source_dir=self.source_folder, build_dir="./")
         cmake.build()
-
-    def imports(self):
-        self.copy("*.dll", dst="bin", src="bin")
-        self.copy("*.dylib*", dst="bin", src="lib")
 
     def test(self):
         os.chdir("bin")
