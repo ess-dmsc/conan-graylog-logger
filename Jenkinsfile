@@ -14,10 +14,10 @@ container_build_bodes = [
   'ubuntu': ContainerBuildNode.getDefaultContainerBuildNode('ubuntu1804')
 ]
 
-packageBuilder = new ConanPackageBuilder(this, container_build_bodes, conan_pkg_channel)
-packageBuilder.defineRemoteUploadNode('centos')
+pipeline_builder = new ConanPackageBuilder(this, container_build_bodes, conan_pkg_channel)
+pipeline_builder.defineRemoteUploadNode('centos')
 
-builders = packageBuilder.createPackageBuilders { container ->
+builders = pipeline_builder.createPackageBuilders { container ->
   packageBuilder.addConfiguration(container, [
     'settings': [
       'graylog_logger:build_type': 'Release'
@@ -29,7 +29,13 @@ node {
   checkout scm
 
   builders['macOS'] = get_macos_pipeline()
-  parallel builders
+
+  try {
+    parallel builders
+  } catch (e) {
+    pipeline_builder.handleFailureMessages()
+    throw e
+  }
 
   // Delete workspace when build is done.
   cleanWs()
