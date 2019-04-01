@@ -4,16 +4,16 @@ from conans import ConanFile, CMake, tools
 
 class GraylogloggerConan(ConanFile):
     name = "graylog-logger"
-    version = "1.1.2-dm1"
+    version = "1.1.5"
     license = "BSD 2-Clause"
     url = "https://bintray.com/ess-dmsc/graylog-logger"
-    requires = ("jsonformoderncpp/3.1.0@vthiery/stable", "asio/1.12.0@bincrafters/stable", "cmake_installer/3.10.0@conan/stable")
+    requires = ("jsonformoderncpp/3.1.0@vthiery/stable", "asio/1.12.0@bincrafters/stable")
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake", "virtualrunenv"
 
     def source(self):
         self.run("git clone https://github.com/ess-dmsc/graylog-logger.git")
-        self.run("cd graylog-logger && git checkout v1.1.2")
+        self.run("cd graylog-logger && git checkout v1.1.5")
     
     def _configure_cmake(self):
         cmake = CMake(self, parallel=True)
