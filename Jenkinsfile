@@ -71,13 +71,6 @@ def get_macos_pipeline() {
             --settings graylog-logger:build_type=Release \
             --build=outdated"
         }  // stage
-
-        stage("macOS: Upload") {
-          sh "upload_conan_package.sh conanfile.py \
-            ${conan_remote} \
-            ${conan_user} \
-            ${conan_pkg_channel}"
-        }  // stage
       }  // dir
     }  // node
   }  // return
