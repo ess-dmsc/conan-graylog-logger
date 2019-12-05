@@ -4,7 +4,6 @@ import ecdcpipeline.ConanPackageBuilder
 
 project = "conan-graylog-logger"
 
-conan_remote = "ess-dmsc-local"
 conan_user = "ess-dmsc"
 conan_pkg_channel = "stable"
 
@@ -49,21 +48,6 @@ def get_macos_pipeline() {
       dir("${project}") {
         stage("macOS: Checkout") {
           checkout scm
-        }  // stage
-
-        stage("macOS: Conan setup") {
-          withCredentials([
-            string(
-              credentialsId: 'local-conan-server-password',
-              variable: 'CONAN_PASSWORD'
-            )
-          ]) {
-            sh "conan user \
-              --password '${CONAN_PASSWORD}' \
-              --remote ${conan_remote} \
-              ${conan_user} \
-              > /dev/null"
-          }  // withCredentials
         }  // stage
 
         stage("macOS: Package") {
