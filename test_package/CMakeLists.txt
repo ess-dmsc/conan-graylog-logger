@@ -8,7 +8,6 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(GraylogLogger REQUIRED)
-message(STATUS "Test.")
 message(STATUS "Libraries: ${GraylogLogger_LIBRARIES}")
 
 add_executable(example example.cpp)
