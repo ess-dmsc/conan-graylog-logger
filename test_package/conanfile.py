@@ -4,7 +4,7 @@ import os
 
 class GraylogloggerTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    generators = "cmake"
+    generators = "cmake_find_package", "cmake"
 
     def build(self):
         cmake = CMake(self)
