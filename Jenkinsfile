@@ -15,6 +15,7 @@ container_build_bodes = [
 ]
 
 package_builder = new ConanPackageBuilder(this, container_build_bodes, conan_pkg_channel)
+package_builder.activateEmailFailureNotifications()
 package_builder.defineRemoteUploadNode('centos')
 
 builders = package_builder.createPackageBuilders { container ->
@@ -33,7 +34,7 @@ node {
   try {
     parallel builders
   } catch (e) {
-    pipeline_builder.handleFailureMessages()
+    package_builder.handleFailureMessages()
     throw e
   }
 
