@@ -3,11 +3,11 @@ from conans import ConanFile, CMake, tools
 
 class GraylogloggerConan(ConanFile):
     name = "graylog-logger"
-    version = "2.0.3-dm1"
-    version_number = "2.0.3"
+    version = "2.0.4-dm1"
+    version_number = "2.0.4"
     license = "BSD 2-Clause"
     url = "https://bintray.com/ess-dmsc/graylog-logger"
-    requires = ("jsonformoderncpp/3.7.0", "asio/1.16.0", "concurrentqueue/8f7e861@ess-dmsc/stable", "fmt/6.2.0")
+    requires = ("nlohmann_json/3.9.1", "asio/1.18.2", "concurrentqueue/8f7e861@ess-dmsc/stable", "fmt/8.0.0")
     settings = "os", "compiler", "build_type", "arch"
     generators = ("cmake_find_package")
     description = "A simple logging library with support for pushing messages to a graylog-logger service."

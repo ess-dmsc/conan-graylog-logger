@@ -13,14 +13,14 @@ If you have made changes to the *graylog-logger* library and subsequently also w
 3. When in the directory of the local copy of *conan-graylog-logger*, execute this command:
 
 	```
-	conan create . graylog-logger/x.y.z-dm1@ess-dmsc/stable
+	conan create .
 	```
 	Where **x.y.z-dm1** is the same version string as set on line 7 in the *conanfile.py*-file.
 
 4. Upload the new package to the relevant conan package repository by executing:
 
 	```
-	conan upload graylog-logger/x.y.z-dm1@ess-dmsc/stable --remote alias_of_repository
+	conan upload graylog-logger/x.y.z-dm1 --remote alias_of_repository
 	```
 
 	Where **x.y.z-dm1** is the version of the conan package as mentioned above and **alias\_of\_repository** is exactly what it says. You can list all the repositories that your local conan installation is aware of by running: `conan remote list`.
