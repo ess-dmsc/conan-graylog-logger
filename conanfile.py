@@ -32,7 +32,7 @@ class GraylogloggerConan(ConanFile):
         cmake = self._configure_cmake()
         cmake.build()
         cmake.build(target="unit_tests")
-        self.run("unit_tests/unit_tests")
+        self.run("unit_tests/unit_tests --gtest_filter=-'*IPv6*'")
 
         if tools.os_info.is_macos:
             os.system("install_name_tool -id '@rpath/libgraylog_logger.dylib' "
