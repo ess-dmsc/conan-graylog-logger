@@ -3,10 +3,11 @@ from conans import ConanFile, CMake, tools
 
 class GraylogloggerConan(ConanFile):
     name = "graylog-logger"
-    version_number = "2.1.3"
+    version_number = "2.1.4"
     version = f"{version_number}"
     license = "BSD 2-Clause"
     url = "https://bintray.com/ess-dmsc/graylog-logger"
+    build_requires = ("gtest/1.11.0",)
     requires = ("nlohmann_json/3.10.5", "asio/1.22.1", "concurrentqueue/1.0.3", "fmt/8.1.1")
     settings = "os", "compiler", "build_type", "arch"
     generators = ("cmake_find_package")
@@ -30,6 +31,8 @@ class GraylogloggerConan(ConanFile):
     def build(self):
         cmake = self._configure_cmake()
         cmake.build()
+        cmake.build(target="unit_tests")
+        self.run("unit_tests/unit_tests --gtest_filter=-'*IPv6*'")
 
         if tools.os_info.is_macos:
             os.system("install_name_tool -id '@rpath/libgraylog_logger.dylib' "
