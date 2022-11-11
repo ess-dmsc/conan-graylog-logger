@@ -5,10 +5,10 @@ import ecdcpipeline.ConanPackageBuilder
 project = "conan-graylog-logger"
 
 conan_user = "ess-dmsc"
-conan_pkg_channel = "stable"
+conan_pkg_channel = "testing"
 
 container_build_bodes = [
-  'centos': ContainerBuildNode.getDefaultContainerBuildNode('centos7-gcc8'),
+  'centos': ContainerBuildNode.getDefaultContainerBuildNode('centos7-gcc11'),
   'debian': ContainerBuildNode.getDefaultContainerBuildNode('debian11'),
   'ubuntu': ContainerBuildNode.getDefaultContainerBuildNode('ubuntu2204')
 ]
