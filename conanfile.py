@@ -3,8 +3,8 @@ from conans import ConanFile, CMake, tools
 
 class GraylogloggerConan(ConanFile):
     name = "graylog-logger"
-    version_number = "2.1.4"
-    version = f"{version_number}-2"
+    version_number = "78c4c03"
+    version = f"{version_number}"
     license = "BSD 2-Clause"
     url = "https://bintray.com/ess-dmsc/graylog-logger"
     build_requires = ("gtest/1.11.0",)
@@ -15,13 +15,14 @@ class GraylogloggerConan(ConanFile):
     
     def source(self):
         self.run("git clone https://github.com/ess-dmsc/graylog-logger.git")
-        self.run(f"cd graylog-logger && git checkout v{self.version_number}")
+        self.run(f"cd graylog-logger && git checkout {self.version_number}")
         
     def _configure_cmake(self):
         cmake = CMake(self, parallel=True)
 
         cmake.definitions["BUILD_EVERYTHING"] = "OFF"
         cmake.definitions["CONAN"] = "DISABLE"
+        cmake.definitions["CMAKE_VERBOSE_MAKEFILE"] = "ON"
         if tools.os_info.is_macos:
             cmake.definitions["CMAKE_MACOSX_RPATH"] = "ON"
             cmake.definitions["CMAKE_SHARED_LINKER_FLAGS"] = "-headerpad_max_install_names"
