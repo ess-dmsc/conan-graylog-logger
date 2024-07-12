@@ -3,8 +3,8 @@ from conans import ConanFile, CMake, tools
 
 class GraylogloggerConan(ConanFile):
     name = "graylog-logger"
-    version_number = "2.1.4"
-    version = f"{version_number}-2"
+    version_number = "2.1.5"
+    version = f"{version_number}"
     license = "BSD 2-Clause"
     url = "https://bintray.com/ess-dmsc/graylog-logger"
     build_requires = ("gtest/1.11.0",)
