@@ -42,6 +42,8 @@ container_build_node:
         setup_conan "$CONAN_EXTERNAL_NAME" "$CONAN_EXTERNAL_URL"
         setup_conan "$CONAN_RELEASE_NAME" "$CONAN_RELEASE_URL"
         
+        conan_package_creation "."
+
         # Upload conan packages
         # if [[ "$CI_COMMIT_REF_NAME" != "master" ]]; then
         #   echo "Skipping upload stage: only the master branch can upload to the stable channel"
