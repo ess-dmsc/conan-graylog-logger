@@ -42,6 +42,7 @@ container_build_node:
         setup_conan "$CONAN_EXTERNAL_NAME" "$CONAN_EXTERNAL_URL"
         setup_conan "$CONAN_RELEASE_NAME" "$CONAN_RELEASE_URL"
         
+        # Conan Package Settings for its creation
         conan_package_settings="graylog_logger:build_type=Release"
 
         conan_package_creation "." "$conan_package_settings"
